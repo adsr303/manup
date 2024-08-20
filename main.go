@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/adsr303/manup/manpages"
+)
 
 func main() {
-	fmt.Println("manup")
+	m, err := manpages.GetManpages()
+	fmt.Println("manup", len(m), err)
 }
