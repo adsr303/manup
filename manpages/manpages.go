@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"os/exec"
 	"regexp"
+	"slices"
+	"strings"
 )
 
 type Manpage struct {
-	Name        string `json:"name"`
-	Section     string `json:"section"`
-	Description string `json:"description"`
+	Name        string
+	Section     string
+	Description string
 }
 
 func GetManpages() ([]Manpage, error) {
@@ -41,3 +43,28 @@ func GetManpages() ([]Manpage, error) {
 }
 
 var whatisLine = regexp.MustCompile(`^(\S+) \(([0-9a-z][a-z]*)\) +- (.+)$`)
+
+type Section struct {
+	Id    string
+	Intro string
+}
+
+func GetSections(pages []Manpage) []Section {
+	sections := make(map[string]bool)
+	intros := make(map[string]string)
+	for _, m := range pages {
+		sections[m.Section] = true
+		if m.Name == "intro" {
+			intros[m.Section] = m.Description
+		}
+	}
+	var result []Section
+	for k := range sections {
+		intro := intros[k]
+		result = append(result, Section{Id: k, Intro: intro})
+	}
+	slices.SortFunc(result, func(a, b Section) int {
+		return strings.Compare(a.Id, b.Id)
+	})
+	return result
+}

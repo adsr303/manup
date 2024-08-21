@@ -11,20 +11,25 @@ import (
 func main() {
 	m, err := manpages.GetManpages()
 	fmt.Println("manup", len(m), err)
-	browseManpages()
+	sections := manpages.GetSections(m)
+	browseManpages(sections)
 }
 
-func browseManpages() {
+func browseManpages(sections []manpages.Section) {
+	var secOpts []huh.Option[string]
+	for _, sec := range sections {
+		secOpts = append(secOpts, huh.NewOption(
+			formatSectionKey(sec),
+			sec.Id,
+		))
+	}
+
 	var section string
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Choose section").
-				Options(
-					huh.NewOption("1", "1"),
-					huh.NewOption("1posix", "1posix"),
-					huh.NewOption("3", "3"),
-				).
+				Options(secOpts...).
 				Value(&section),
 		),
 	)
@@ -35,4 +40,11 @@ func browseManpages() {
 	}
 
 	fmt.Println(section)
+}
+
+func formatSectionKey(sec manpages.Section) string {
+	if sec.Intro != "" {
+		return fmt.Sprintf("%s - %s", sec.Id, sec.Intro)
+	}
+	return sec.Id
 }
