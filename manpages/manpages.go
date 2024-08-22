@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 )
@@ -42,3 +43,11 @@ func GetManpages() ([]Manpage, error) {
 }
 
 var whatisLine = regexp.MustCompile(`^(\S+) \(([0-9a-z][a-z]*)\) +- `)
+
+func ShowManpage(id string) error {
+	cmd := exec.Command("man", id)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
