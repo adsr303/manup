@@ -23,7 +23,7 @@ func browseManpages(pages []manpages.Manpage) string {
 	var manOpts []huh.Option[string]
 	for _, page := range pages {
 		manOpts = append(manOpts, huh.NewOption(
-			page.Description,
+			trimToEllipsis(page.Description),
 			page.Name+"."+page.Section,
 		))
 	}

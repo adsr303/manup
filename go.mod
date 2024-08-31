@@ -2,7 +2,10 @@ module github.com/adsr303/manup
 
 go 1.23.0
 
-require github.com/charmbracelet/huh v0.5.3
+require (
+	github.com/charmbracelet/huh v0.5.3
+	golang.org/x/term v0.23.0
+)
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
