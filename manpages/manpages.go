@@ -42,7 +42,7 @@ func GetManpages() ([]Manpage, error) {
 	return result, nil
 }
 
-var whatisLine = regexp.MustCompile(`^(\S+) \(([0-9a-z][a-z]*)\) +- `)
+var whatisLine = regexp.MustCompile(`^(\S+) \(([[:alnum:]][[:alpha:]]*)\) +- `)
 
 func ShowManpage(id string) error {
 	cmd := exec.Command("man", id)
